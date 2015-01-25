@@ -36,7 +36,9 @@ CSV.foreach("./data/Activity_Tracking_db_4_data.csv", headers: true) do |row|
         activity_label: activity[:label],
         activity_color: activity[:color],
         actual_start_time: actual_start_time,
+        actual_start_time_sec: actual_start_time.to_i,
         actual_end_time: actual_end_time,
+        actual_end_time_sec: actual_end_time.to_i,
         duration: (actual_end_time - actual_start_time).to_i,
         observation_date: observation_date,
         notes: row[6]
@@ -46,7 +48,5 @@ CSV.foreach("./data/Activity_Tracking_db_4_data.csv", headers: true) do |row|
     raise ex
   end
 end
-
-# puts data
 
 File.write("./data/data.json", JSON.generate(data))
