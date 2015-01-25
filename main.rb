@@ -1,3 +1,5 @@
+# This file needs to be run with bundler like this:
+# bundle exec ruby main.rb
 require 'csv'
 require 'time'
 require 'date'
@@ -27,6 +29,7 @@ CSV.foreach("./data/Activity_Tracking_db_4_data.csv", headers: true) do |row|
     activity = activities.find { |a| a[:code] == row[2] }
     category = categories.find { |c| c[:code] == activity[:category_code] }
 
+    # NOTE: commented keys are not used in the visualization
     data << {
         id: row[0],
         observation_id: row[1],
