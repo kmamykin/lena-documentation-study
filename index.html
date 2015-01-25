@@ -55,21 +55,8 @@
 
     d3.json("data/data.json", function(error, data) {
 
-//        data.forEach(function(d) {
-//            var y0 = 0;
-//            d.total = d.ages[d.ages.length - 1].y1;
-//        });
-
-//        data.sort(function(a, b) {
-//            return b.observation_id - a.observation_id;
-//        });
-
         // set the boundaries of X
-        x.domain([d3.min(data.data, function(d) {
-            return d.start_since_midnight;
-        }), d3.max(data.data, function(d) {
-            return d.end_since_midnight;
-        })]);
+        x.domain([60*60*6, 60*60*22]);
         // set the boundaries of Y
         y.domain(data.data.map(function(d) {
             return d.observation_id;
@@ -79,7 +66,6 @@
         })).range(data.categories.map(function(c) {
             return "#" + c.color;
         }));
-
 
         svg.append("g")
                 .attr("class", "x axis")
@@ -96,14 +82,6 @@
                 .style("text-anchor", "end")
                 .text("Observations");
 
-//        var observation = svg.selectAll(".observation")
-//                .data(data).enter()
-//                .append("g")
-//                .attr("class", "g")
-//                .attr("transform", function(d) {
-//                    return "translate(" + y(d.State) + ",0)";
-//                });
-//
         svg.selectAll("rect")
                 .data(data.data)
                 .enter()

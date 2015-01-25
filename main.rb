@@ -37,11 +37,10 @@ CSV.foreach("./data/Activity_Tracking_db_4_data.csv", headers: true) do |row|
         # activity_code: row[2],
         # activity_label: activity[:label],
         # activity_color: activity[:color],
-        actual_start_time: actual_start_time,
-        actual_start_time_sec: actual_start_time.to_i,
-        actual_end_time: actual_end_time,
-        actual_end_time_sec: actual_end_time.to_i,
-        duration: (actual_end_time - actual_start_time).to_i,
+        # actual_start_time: actual_start_time,
+        # actual_start_time_sec: actual_start_time.to_i,
+        # actual_end_time: actual_end_time,
+        # actual_end_time_sec: actual_end_time.to_i,
         start_since_midnight: actual_start_time.seconds_since_midnight.to_i,
         end_since_midnight: actual_end_time.seconds_since_midnight.to_i
         # observation_date: observation_date,
@@ -53,4 +52,4 @@ CSV.foreach("./data/Activity_Tracking_db_4_data.csv", headers: true) do |row|
   end
 end
 
-File.write("./data/data.json", JSON.generate({categories: categories, data: data}))
+File.write("./data/data.json", JSON.pretty_generate({categories: categories, data: data}))
