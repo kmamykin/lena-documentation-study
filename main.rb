@@ -11,7 +11,6 @@ end
 
 # puts categories
 
-
 activities = []
 CSV.foreach("./data/Activity_Tracking_db_4_activity.csv", headers: true) do |row|
   activities << {code: row[0], category_code: row[1], theme_code: row[2], label: row[3], color: row[4]}

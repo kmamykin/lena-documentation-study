@@ -30,7 +30,11 @@
             width = 1200 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-    var x = d3.scale.linear()
+    var YEAR = 2015, MONTH = 1, DAY = 1;
+    var fromTime = new Date(YEAR, MONTH, DAY, 7, 0, 0);
+    var toTime = new Date(YEAR, MONTH, DAY, 21, 0, 0);
+    var x = d3.time.scale()
+            .domain([fromTime, toTime])
             .rangeRound([0, width]);
 
     var y = d3.scale.ordinal()
@@ -39,7 +43,8 @@
     var xAxis = d3.svg.axis()
             .scale(x)
             .orient("bottom")
-            .tickFormat(d3.format(".2s"));
+            .ticks(d3.time.hour, 1);
+//            .tickFormat(d3.format("%I:%M"));
 
     var yAxis = d3.svg.axis()
             .scale(y)
@@ -55,8 +60,11 @@
 
     d3.json("data/data.json", function(error, data) {
 
-        // set the boundaries of X
-        x.domain([60*60*6, 60*60*22]);
+        data.data.forEach(function(d) {
+            d.start_time = new Date(YEAR, MONTH, DAY, 0, 0, d.start_since_midnight);
+            d.end_time = new Date(YEAR, MONTH, DAY, 0, 0, d.end_since_midnight);
+        });
+
         // set the boundaries of Y
         y.domain(data.data.map(function(d) {
             return d.observation_id;
@@ -88,10 +96,10 @@
                 .append("rect")
                 .attr("height", y.rangeBand())
                 .attr("width", function(d) {
-                    return x(d.end_since_midnight) - x(d.start_since_midnight);
+                    return x(d.end_time) - x(d.start_time);
                 })
                 .attr("x", function(d) {
-                    return x(d.start_since_midnight);
+                    return x(d.start_time);
                 })
                 .attr("y", function(d) {
                     return y(d.observation_id);
@@ -112,7 +120,7 @@
                 .attr("x", width - 18)
                 .attr("width", 18)
                 .attr("height", 18)
-                .style("fill", function(d){
+                .style("fill", function(d) {
                     return color(d.code);
                 });
 
