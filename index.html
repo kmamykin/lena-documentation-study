@@ -64,9 +64,9 @@
 
         // set the boundaries of X
         x.domain([d3.min(data, function(d) {
-            return d.actual_start_time_sec;
+            return d.start_since_midnight;
         }), d3.max(data, function(d) {
-            return d.actual_end_time_sec;
+            return d.end_since_midnight;
         })]);
         // set the boundaries of Y
         y.domain(data.map(function(d) {
@@ -81,6 +81,12 @@
         svg.append("g")
                 .attr("class", "y axis")
                 .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Observations");
 
 //        var observation = svg.selectAll(".observation")
 //                .data(data).enter()
@@ -96,10 +102,10 @@
                 .append("rect")
                 .attr("height", y.rangeBand())
                 .attr("width", function(d) {
-                    return x(d.actual_end_time_sec) - x(d.actual_start_time_sec);
+                    return x(d.end_since_midnight) - x(d.start_since_midnight);
                 })
                 .attr("x", function(d) {
-                    return x(d.actual_start_time_sec);
+                    return x(d.start_since_midnight);
                 })
                 .attr("y", function(d) {
                     return y(d.observation_id);
