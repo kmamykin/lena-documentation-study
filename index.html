@@ -45,6 +45,8 @@
             .scale(y)
             .orient("left");
 
+    var color = d3.scale.ordinal();
+
     var svg = d3.select("body").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -53,25 +55,31 @@
 
     d3.json("data/data.json", function(error, data) {
 
-        data.forEach(function(d) {
+//        data.forEach(function(d) {
 //            var y0 = 0;
 //            d.total = d.ages[d.ages.length - 1].y1;
-        });
+//        });
 
 //        data.sort(function(a, b) {
 //            return b.observation_id - a.observation_id;
 //        });
 
         // set the boundaries of X
-        x.domain([d3.min(data, function(d) {
+        x.domain([d3.min(data.data, function(d) {
             return d.start_since_midnight;
-        }), d3.max(data, function(d) {
+        }), d3.max(data.data, function(d) {
             return d.end_since_midnight;
         })]);
         // set the boundaries of Y
-        y.domain(data.map(function(d) {
+        y.domain(data.data.map(function(d) {
             return d.observation_id;
         }));
+        color.domain(data.categories.map(function(c) {
+            return c.code;
+        })).range(data.categories.map(function(c) {
+            return "#" + c.color;
+        }));
+
 
         svg.append("g")
                 .attr("class", "x axis")
@@ -97,7 +105,7 @@
 //                });
 //
         svg.selectAll("rect")
-                .data(data)
+                .data(data.data)
                 .enter()
                 .append("rect")
                 .attr("height", y.rangeBand())
@@ -111,7 +119,32 @@
                     return y(d.observation_id);
                 })
                 .style("fill", function(d) {
-                    return "#" + d.category_color;
+                    return color(d.category_code);
+                });
+
+        var legend = svg.selectAll(".legend")
+                .data(data.categories).enter()
+                .append("g")
+                .attr("class", "legend")
+                .attr("transform", function(d, i) {
+                    return "translate(0," + i * 20 + ")";
+                });
+
+        legend.append("rect")
+                .attr("x", width - 18)
+                .attr("width", 18)
+                .attr("height", 18)
+                .style("fill", function(d){
+                    return color(d.code);
+                });
+
+        legend.append("text")
+                .attr("x", width - 24)
+                .attr("y", 9)
+                .attr("dy", ".35em")
+                .style("text-anchor", "end")
+                .text(function(d) {
+                    return d.label;
                 });
     });
 </script>

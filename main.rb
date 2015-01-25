@@ -31,9 +31,9 @@ CSV.foreach("./data/Activity_Tracking_db_4_data.csv", headers: true) do |row|
     data << {
         id: row[0],
         observation_id: row[1],
-        # category_code: category[:code],
+        category_code: category[:code],
         # category_label: category[:label],
-        category_color: category[:color],
+        # category_color: category[:color],
         # activity_code: row[2],
         # activity_label: activity[:label],
         # activity_color: activity[:color],
@@ -53,4 +53,4 @@ CSV.foreach("./data/Activity_Tracking_db_4_data.csv", headers: true) do |row|
   end
 end
 
-File.write("./data/data.json", JSON.generate(data))
+File.write("./data/data.json", JSON.generate({categories: categories, data: data}))
