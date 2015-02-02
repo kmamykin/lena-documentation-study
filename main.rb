@@ -43,4 +43,20 @@ CSV.foreach("./data/Activity_Tracking_db_4_data.csv", headers: true) do |row|
   end
 end
 
-File.write("./data/data.json", JSON.pretty_generate({categories: categories, data: data}))
+# Calculate transition matrix
+transitionMatrix = Array.new(categories.length) { Array.new(categories.length) { 0 } }
+from = nil
+data.each_with_index do |datum, index|
+  if index == 0
+    from = datum
+  else
+    to = datum
+    from_cat = categories.find_index { |c| c[:code] == from[:category_code] }
+    to_cat = categories.find_index { |c| c[:code] == to[:category_code] }
+    puts "From #{from}, to #{to}, from #{from_cat}, to #{to_cat}"
+    transitionMatrix[from_cat][to_cat] = transitionMatrix[from_cat][to_cat] + 1
+    from = to
+  end
+end
+
+File.write("./data/data.json", JSON.pretty_generate({categories: categories, data: data, transitionMatrix: transitionMatrix.to_a}))
