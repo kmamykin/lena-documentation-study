@@ -10,7 +10,7 @@
         }
 
         .chord path {
-            fill-opacity: .67;
+            fill-opacity: 1;
             stroke: #000;
             stroke-width: .5px;
         }
@@ -64,7 +64,7 @@
                 .enter().append("path")
                 .attr("d", d3.svg.chord().radius(innerRadius))
                 .style("fill", function(d) {
-                    return fill(d.target.index);
+                    return fill(d.source.index);
                 })
                 .style("opacity", 1);
 
