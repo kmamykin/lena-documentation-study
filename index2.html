@@ -14,6 +14,16 @@
             stroke: #000;
             stroke-width: .5px;
         }
+
+        table.transitions td.data {
+            font-family: Courier;
+            text-align: right;
+        }
+        table.transitions th.label, td.label {
+            font-family: Sans-Serif;
+            font-weight: 700;
+        }
+
     </style>
 
 </head>
@@ -26,6 +36,7 @@
 
         var chord = d3.layout.chord()
                 .padding(.05)
+                .sortSubgroups(d3.descending)
                 .matrix(data.transitionMatrix);
 
         var width = 960,
@@ -71,7 +82,7 @@
         // This is copy-paste from index.html
         var legend = svg.append("g")
                 .attr("class", "legend-group")
-                .attr("transform", "translate(" + (width / 2 - 18) + "," + (-1*height/2 + 32) + ")")
+                .attr("transform", "translate(" + (width / 2 - 18) + "," + (-1 * height / 2 + 32) + ")")
                 .selectAll(".legend")
                 .data(data.categories).enter()
                 .append("g")
@@ -97,7 +108,47 @@
                     return d.label;
                 });
 
+        // render the table
+        transitionsTable(data);
     });
+
+    function transitionsTable(data) {
+        var table = d3.select("body").append("table").attr("style", "").attr("class", "transitions"),
+                thead = table.append("thead"),
+                tbody = table.append("tbody");
+
+        // append the header row
+        thead.append("tr")
+                .selectAll("th")
+                .data([""].concat(data.categories.map(function(c) {
+                    return c.label
+                })))
+                .enter()
+                .append("th").attr("class", "label")
+                .text(function(label) {
+                    return label;
+                });
+
+        // create a row for each object in the data
+        var rows = tbody.selectAll("tr")
+                .data(data.transitionMatrix)
+                .enter()
+                .append("tr");
+
+        // create a cell in each row for each column
+        var cells = rows.selectAll("td")
+                .data(function(row, index) {
+                    return [data.categories[index].label].concat(row);
+                })
+                .enter()
+                .append("td")
+                .attr("class", function(d, index){ return index == 0 ? "label" : "data";})
+                .html(function(d) {
+                    return d;
+                });
+
+        return table;
+    }
 
 </script>
 
