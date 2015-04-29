@@ -68,11 +68,9 @@
         y.domain(data.data.map(function(d) {
             return d.observation_id;
         }));
-        color.domain(data.categories.map(function(c) {
-            return c.code;
-        })).range(data.categories.map(function(c) {
-            return "#" + c.color;
-        }));
+        color.domain(data.categories.map(function(c) { return c.code; }))
+            .range(['#eee', '#ddd', '#ccc', '#bbb', '#aaa', '#999', '#000', '#888', '#777', '#666']);
+//            .range(data.categories.map(function(c) { return "#" + c.color; }));
 
         svg.append("g")
                 .attr("class", "x axis")
